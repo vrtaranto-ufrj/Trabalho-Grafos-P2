@@ -18,6 +18,13 @@ Graph::~Graph() {
 
 }
 
+void Graph::printList() {
+    for ( unsigned long i = 0; i < adjacency_list.size(); i++ ) {
+        cout << "V: " << i << " -> ";
+        adjacency_list[i]->printList();
+    }
+}
+
 void Graph::loadList( string file ) {
     // Método para carregar um grafo a partir de um arquivo de texto no formato lista de adjacência
     // Argumentos:
@@ -33,11 +40,11 @@ void Graph::loadList( string file ) {
 
     ifstream inputFile(file);
 
-    if (!inputFile.is_open())
+    if (!inputFile.is_open()) {
         exit(FILE_COULD_NOT_OPEN);
+    }
 
     string line, value;
-    int edge[2];
 
     getline(inputFile, line);
     int _size = stoi(line);
@@ -47,27 +54,154 @@ void Graph::loadList( string file ) {
     for (int i = 0; i < _size; i++)
         adjacency_list[i] = new List;
 
+    int numPalavras;
+    int edge[2];
+    float peso;
+
     // Agora, vamos ler até o fim do arquivo.
     while (getline(inputFile, line)) {
         value = "";
+        numPalavras = 0;
 
         for (unsigned long c = 0; c < line.size(); c++) {
-            if (line[c] != ' ')
+            if ( c == line.size() - 1 ) {
                 value += line[c];
-            else {
-                edge[0] = stoi(value) - 1;
+                peso = stof(value);
+                if (peso < 0) {
+                    cout << "Grafo possui peso negativo: " << peso << endl;
+                    exit(NEGATIVE_WEIGHT);
+                }
                 value = "";
+                numPalavras++;
+            }
+            if (line[c] != ' ') {
+                value += line[c];
+            }
+            else {
+                if (numPalavras == 0) {
+                    edge[0] = stoi(value) - 1;
+                    value = "";
+                    numPalavras++;
+                }
+                else if (numPalavras == 1) {
+                    edge[1] = stoi(value) - 1;
+                    value = "";
+                    numPalavras++;
+                }
             }
         }
-
-        edge[1] = stoi(value) - 1;
-        adjacency_list[edge[0]]->insertNode(edge[1]);
-        adjacency_list[edge[1]]->insertNode(edge[0]);
+        adjacency_list[edge[0]]->insertNode(edge[1], peso);
+        adjacency_list[edge[1]]->insertNode(edge[0], peso);
     }
 
     inputFile.close();
     loaded = true;
     num_vertices = _size;
+}
+
+float Graph::dijkstra( int root, int destiny ) {
+    vector<float> distance( num_vertices, 1e20 );
+    vector<int> parent( num_vertices, -1 );
+    vector<bool> visited( num_vertices, false );
+    Node* current_edge;
+    int current_vertex, neighbor;
+    float weight;
+    distance[root] = 0;
+
+    while ( true ) {
+        current_vertex = -1;
+        for ( int i = 0; i < num_vertices; i++ ) {
+            if ( visited[i] == 0 && (current_vertex == -1 || distance[i] < distance[current_vertex]) )
+                current_vertex = i;
+        }
+
+        if ( current_vertex == -1 )
+            break;
+
+        if ( current_vertex == destiny ) {
+            printCaminho( root, destiny, parent );
+            return distance[destiny];
+        }
+        
+        visited[current_vertex] = 1;
+
+        current_edge = adjacency_list[current_vertex]->getHead();
+        while ( current_edge != nullptr ) {
+            neighbor = current_edge->getKey();
+            weight = current_edge->getWeight();
+            if ( distance[neighbor] == -1 || distance[neighbor] > distance[current_vertex] + weight ) {
+                distance[neighbor] = distance[current_vertex] + weight;
+                parent[neighbor] = current_vertex;
+            }
+            current_edge = current_edge->getNext();
+        }
+    }
+
+    return distance[destiny];
+
+}
+
+float Graph::dijkstra_heap( int root, int destiny ) {
+    BinaryHeap* heap = new BinaryHeap( num_vertices );
+    vector<float> distance( num_vertices, 1e20 );
+    vector<int> parent( num_vertices, -1 );
+    vector<bool> visited( num_vertices, false );
+    Node* current_edge;
+    int current_vertex, neighbor;
+    float weight;
+    distance[root] = 0;
+    pair<float, int> current_pair;
+    current_pair.first = 0;
+    current_pair.second = root;
+    heap->push( current_pair );
+
+    while ( !heap->empty() ) {
+        current_vertex = heap->top().second;
+
+        if ( current_vertex == destiny ) {
+            printCaminho( root, destiny, parent );
+            return distance[destiny];
+        }
+        
+        heap->pop();
+        visited[current_vertex] = true;
+
+        current_edge = adjacency_list[current_vertex]->getHead();
+        while ( current_edge != nullptr ) {
+            neighbor = current_edge->getKey();
+            weight = current_edge->getWeight();
+            if ( distance[neighbor] > distance[current_vertex] + weight ) {
+                distance[neighbor] = distance[current_vertex] + weight;
+                current_pair.first = distance[neighbor];
+                current_pair.second = neighbor;
+                if ( parent[neighbor] == -1 )
+                    heap->push( current_pair );
+                else
+                    heap->decreaseKey( neighbor, distance[neighbor] );
+                parent[neighbor] = current_vertex;
+                
+            }
+            current_edge = current_edge->getNext();
+        }
+    }
+    return -1;
+}
+
+void Graph::printCaminho( int root, int destiny, vector<int>& parent ) {
+    cout << "Caminho: ";
+    int current_vertex = destiny;
+    vector<int> caminho;
+    while ( current_vertex != root ) {
+        caminho.push_back( current_vertex );
+        current_vertex = parent[current_vertex];
+    }
+    caminho.push_back( current_vertex );
+    for ( int i = caminho.size() - 1; i >= 0; i-- ) {
+        cout << caminho[i] + 1;
+        if ( i != 0 )
+            cout << " -> ";
+    }
+    cout << endl;
 }
 
 void Graph::loadMatrix( string file ) {

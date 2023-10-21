@@ -19,14 +19,28 @@ List::~List() {
 
 }
 
-void List::insertNode( int key ) {
+void List::insertNode( int key, float weight ) {
     // Método para inserir um nó na lista
     // Argumentos:
     //     key: chave do nó a ser inserido
+    //     weight: peso da aresta
 
-    Node* newNode = new Node( key );
-    newNode->setNext( head );
-    head = newNode;
+    Node* no = new Node( key, weight );
+    no->setNext( head );
+    head = no;
+}
+
+void List::printList() {
+    // Método para imprimir a lista
+
+    Node* no = head;
+
+    while ( no != nullptr ) {
+        cout << "V: " << no->getKey() << " , Peso:" << no->getWeight() << " -> ";
+        no = no->getNext();
+    }
+
+    cout << endl;
 }
 
 Node* List::getHead() {

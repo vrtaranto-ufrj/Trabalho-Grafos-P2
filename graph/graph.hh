@@ -10,10 +10,14 @@
 #include <omp.h>
 #include <iomanip>
 #include <ctime>
+#include <utility>
+
 
 #include "../list/list.hh"
+#include "../heap/binary_heap.hh"
 
 #define FILE_COULD_NOT_OPEN     1
+#define NEGATIVE_WEIGHT         2
 
 using namespace std;
 
@@ -24,6 +28,12 @@ class Graph {
 
         void loadMatrix( string file );
         void loadList( string file );
+
+        float dijkstra( int root, int destiny = -1 );
+        float dijkstra_heap( int root, int destiny = -1 );
+        void printCaminho( int root, int destiny, vector<int>& parent );
+
+        void printList();
 
         void bfs( int root );
         void dfs( int root );
