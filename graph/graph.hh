@@ -11,6 +11,8 @@
 #include <iomanip>
 #include <ctime>
 #include <utility>
+#include <sstream>
+
 
 
 #include "../list/list.hh"
@@ -28,10 +30,13 @@ class Graph {
 
         void loadMatrix( string file );
         void loadList( string file );
-
+        void loadListWeight( string file );
+        
         float dijkstra( int root, int destiny = -1 );
         float dijkstra_heap( int root, int destiny = -1 );
         void printCaminho( int root, int destiny, vector<int>& parent );
+
+        int getMin( vector<bool>& visitados, vector<float> &distancias );
 
         void printList();
 
@@ -51,6 +56,7 @@ class Graph {
         vector<int> vertices;
         vector<List*> adjacency_list;
         vector<vector<char>> adjacency_matrix;  // char para usar apenas 1 byte ao inves de 4 bytes (int)
+        vector< vector< pair< float, int > > > adjacent_vector;
 
         void clearGraphRepresentation();
 
