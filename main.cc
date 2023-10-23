@@ -7,6 +7,7 @@ using namespace std;
 
 
 int main( int argc, char *argv[] ) {
+    
     time_t inicio;
     float distancia;
     Graph* grafo = new Graph();
