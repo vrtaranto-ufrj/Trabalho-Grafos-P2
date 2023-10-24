@@ -33,7 +33,7 @@ int main( int argc, char *argv[] ) {
         
 
 
-        int k = 1;
+        int k = 100;
         auto start = chrono::high_resolution_clock::now();
         for ( int j = 0; j < k; j++ ) {
             grafo->dijkstra( rand() % grafo->getNumVertices() + 1 );
@@ -41,17 +41,17 @@ int main( int argc, char *argv[] ) {
         auto finish = chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = finish - start;
         std::cout << std::fixed << std::setprecision(3);
-        cout << "Tempo medio usando vetor: " << elapsed.count() / k << endl << endl;
+        cout << "Tempo medio usando vetor: " << elapsed.count() / k << "s" << endl << endl;
 
 
-        k = 1;
+        k = 100;
         start = std::chrono::high_resolution_clock::now();
         for ( int j = 0; j < k; j++ ) {
             grafo->dijkstra_heap( rand() % grafo->getNumVertices() + 1 );
         }
         finish = chrono::high_resolution_clock::now();
         elapsed = finish - start;
-        cout << "Tempo medio usando heap: " << elapsed.count() / k << endl << endl;
+        cout << "Tempo medio usando heap: " << elapsed.count() / k << "s" << endl << endl;
 
         cout << "--------------------------------------------------------------------------------------------------" << endl << endl;
     }

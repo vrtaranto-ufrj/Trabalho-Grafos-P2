@@ -194,10 +194,10 @@ float Graph::dijkstra( int root, int destiny ) {
 int Graph::getMin( vector<bool>& visitados, vector<float> &distancias ) {
     int minPos = -1;
     float minimo = 1e100;
-    #pragma omp parallel for shared(minPos, minimo)
+    //#pragma omp parallel for shared(minPos, minimo)
     for ( int i = 0; i < num_vertices; i++ ) {
         if ( !visitados[i] && distancias[i] < minimo ) {
-            #pragma omp critical
+            //#pragma omp critical
             {
                 if (distancias[i] < minimo) {
                     minPos = i;
