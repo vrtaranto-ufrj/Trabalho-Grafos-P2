@@ -217,7 +217,6 @@ float Graph::dijkstra_heap( int root, int destiny ) {
     BinaryHeap* heap = new BinaryHeap( num_vertices );
     vector<float> distance( num_vertices, 1e20 );
     vector<int> parent( num_vertices, -1 );
-    vector<bool> visited( num_vertices, false );
     Node* current_edge;
     int current_vertex, neighbor;
     float weight;
@@ -236,7 +235,6 @@ float Graph::dijkstra_heap( int root, int destiny ) {
         }
         
         heap->pop();
-        visited[current_vertex] = true;
 
         current_edge = adjacency_list[current_vertex]->getHead();
         while ( current_edge != nullptr ) {
