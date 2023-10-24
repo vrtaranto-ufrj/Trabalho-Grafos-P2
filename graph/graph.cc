@@ -1,7 +1,7 @@
 #include "graph.hh"
 
 
-Graph::Graph() {
+Graph::Graph() : printPath(true) {
     // Construtor padrão
     loaded = false;
     current_component = 1;
@@ -152,6 +152,10 @@ void Graph::loadListWeight( string file ) {
 }
 
 float Graph::dijkstra( int root, int destiny ) {
+    root--;
+    destiny--;
+    if ( root < 0 || destiny < -2 )
+        exit( VERTEX_LESS_ZERO );
     vector<float> distance( num_vertices, 1e100 );
     vector<int> parent( num_vertices, -1 );
     vector<bool> visited( num_vertices, false );
@@ -190,16 +194,26 @@ float Graph::dijkstra( int root, int destiny ) {
 int Graph::getMin( vector<bool>& visitados, vector<float> &distancias ) {
     int minPos = -1;
     float minimo = 1e100;
+    #pragma omp parallel for shared(minPos, minimo)
     for ( int i = 0; i < num_vertices; i++ ) {
         if ( !visitados[i] && distancias[i] < minimo ) {
-            minPos = i;
-            minimo = distancias[i];
+            #pragma omp critical
+            {
+                if (distancias[i] < minimo) {
+                    minPos = i;
+                    minimo = distancias[i];
+                }
+            }
         }
     }
     return minPos;
 }
 
 float Graph::dijkstra_heap( int root, int destiny ) {
+    root--;
+    destiny--;
+    if ( root < 0 || destiny < -2 )
+        exit( VERTEX_LESS_ZERO );
     BinaryHeap* heap = new BinaryHeap( num_vertices );
     vector<float> distance( num_vertices, 1e20 );
     vector<int> parent( num_vertices, -1 );
@@ -246,6 +260,8 @@ float Graph::dijkstra_heap( int root, int destiny ) {
 }
 
 void Graph::printCaminho( int root, int destiny, vector<int>& parent ) {
+    path.clear();
+
     cout << "Caminho: ";
     int current_vertex = destiny;
     vector<int> caminho;
@@ -254,12 +270,24 @@ void Graph::printCaminho( int root, int destiny, vector<int>& parent ) {
         current_vertex = parent[current_vertex];
     }
     caminho.push_back( current_vertex );
+    if ( printPath ) {
     for ( int i = caminho.size() - 1; i >= 0; i-- ) {
         cout << caminho[i] + 1;
         if ( i != 0 )
             cout << " -> ";
     }
+    
     cout << endl;
+    }
+    path = caminho;
+}
+
+vector<int>& Graph::getPath() {
+    return path;
+}
+
+int Graph::getNumVertices() {
+    return num_vertices;
 }
 
 void Graph::loadMatrix( string file ) {

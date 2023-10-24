@@ -12,9 +12,8 @@ Esta biblioteca fornece uma série de ferramentas para manipulação e análise 
 
 ## Para Utilizar o programa de Testes
 
-1. Coloque na pasta `grafos` os grafos de 1 até o 6
-2. Execute o comando `make` para compilar o programa
-3. Execute o comando `make run` ou `./grafos` para executar o programa
+1. Execute o comando `make` para compilar o programa
+2. Execute o comando `make run` ou `./grafo` para executar o programa
 
 ## Métodos Disponíveis
 
@@ -38,6 +37,12 @@ Esta biblioteca fornece uma série de ferramentas para manipulação e análise 
 
 Todos os métodos acima são compatíveis com grafos não direcionados.
 
+## Grafos Com Peso
+
+- `void loadMatrixWeighted(string file)`: Carrega um grafo a partir de um arquivo utilizando matriz de adjacência com pesos.
+- `void loadListWeighted(string file)`: Carrega um grafo a partir de um arquivo utilizando lista de adjacência com pesos.
+- `void dijkstra(int root, int destiny)`: Realiza o algoritmo de Dijkstra a partir de um vértice raiz.
+- `void dijkstra_heap(int root, int destiny)`: Realiza o algoritmo de Dijkstra a partir de um vértice raiz.
 ---
 
 **Nota**: Certifique-se de que os arquivos de entrada estejam no formato correto e que as dependências estejam corretamente configuradas em seu ambiente de desenvolvimento.

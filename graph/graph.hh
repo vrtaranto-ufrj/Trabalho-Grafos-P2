@@ -20,6 +20,7 @@
 
 #define FILE_COULD_NOT_OPEN     1
 #define NEGATIVE_WEIGHT         2
+#define VERTEX_LESS_ZERO        3
 
 using namespace std;
 
@@ -38,6 +39,8 @@ class Graph {
 
         int getMin( vector<bool>& visitados, vector<float> &distancias );
 
+        vector<int>& getPath();
+
         void printList();
 
         void bfs( int root );
@@ -46,6 +49,9 @@ class Graph {
         int diameter( int cores = -1 );  // Padrão usar todos threads
         int diameter_aprox( int precision = 50, int cores = -1 ); // Padrão 50 Bfs e usando todos threads
         void write_informations();
+        int getNumVertices();
+
+        bool printPath;
 
     private:
         bool loaded;
@@ -57,6 +63,7 @@ class Graph {
         vector<List*> adjacency_list;
         vector<vector<char>> adjacency_matrix;  // char para usar apenas 1 byte ao inves de 4 bytes (int)
         vector< vector< pair< float, int > > > adjacent_vector;
+        vector< int > path;
 
         void clearGraphRepresentation();
 
