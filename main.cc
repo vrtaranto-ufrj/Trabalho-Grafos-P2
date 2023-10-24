@@ -17,48 +17,7 @@ int main( int argc, char *argv[] ) {
 
     float distancia;
     Graph* grafo = new Graph();
-
-    string arquivo = "grafo_W_", extensao = ".txt";
-
-
-    for ( int i = 1; i <= 5; i++ ) {
-        cout << "Carregando grafo : " << i << endl;
-        grafo->loadListWeight( arquivo + to_string( i ) + extensao );
-
-        for ( int j = 20; j <= 60; j += 10 ) {
-            cout << "10 -> " << j << endl;
-            distancia = grafo->dijkstra_heap( 10, j );
-            cout << "Distancia: " << distancia << endl << endl;
-        }
-        
-
-
-        int k = 100;
-        auto start = chrono::high_resolution_clock::now();
-        for ( int j = 0; j < k; j++ ) {
-            grafo->dijkstra( rand() % grafo->getNumVertices() + 1 );
-        }
-        auto finish = chrono::high_resolution_clock::now();
-        chrono::duration<double> elapsed = finish - start;
-        std::cout << std::fixed << std::setprecision(3);
-        cout << "Tempo medio usando vetor: " << elapsed.count() / k << "s" << endl << endl;
-
-
-        k = 100;
-        start = std::chrono::high_resolution_clock::now();
-        for ( int j = 0; j < k; j++ ) {
-            grafo->dijkstra_heap( rand() % grafo->getNumVertices() + 1 );
-        }
-        finish = chrono::high_resolution_clock::now();
-        elapsed = finish - start;
-        cout << "Tempo medio usando heap: " << elapsed.count() / k << "s" << endl << endl;
-
-        cout << "--------------------------------------------------------------------------------------------------" << endl << endl;
-    }
-
-    delete grafo;
-
-    grafo = new Graph();
+	
 
     unordered_map<string, int> mapNomes;
     unordered_map<int, string> mapIds;
@@ -98,6 +57,71 @@ int main( int argc, char *argv[] ) {
     }
 
     delete grafo;
+	
+    grafo = new Graph();
+
+    string arquivo = "grafo_W_", extensao = ".txt";
+
+
+    for ( int i = 1; i <= 5; i++ ) {
+        cout << "Carregando grafo : " << i << endl;
+        grafo->loadListWeight( arquivo + to_string( i ) + extensao );
+
+        for ( int j = 20; j <= 60; j += 10 ) {
+            cout << "10 -> " << j << endl;
+            distancia = grafo->dijkstra_heap( 10, j );
+            cout << "Distancia: " << distancia << endl << endl;
+        }
+        
+
+        // -------------------------------------------------------------
+        // Numero de vezes para rodar Dijkstra com Vetor
+        // -------------------------------------------------------------
+
+        int k = 1;
+
+	    //--------------------------------------------------------------
+
+        //--------------------------------------------------------------
+
+        auto start = chrono::high_resolution_clock::now();
+        for ( int j = 0; j < k; j++ ) {
+            grafo->dijkstra( rand() % grafo->getNumVertices() + 1 );
+        }
+        auto finish = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = finish - start;
+        std::cout << std::fixed << std::setprecision(3);
+        cout << "Tempo medio usando vetor: " << elapsed.count() / k << "s" << endl << endl;
+
+
+
+
+
+
+        // -------------------------------------------------------------
+        // Numero de vezes para rodar Dijkstra com Vetor
+        // -------------------------------------------------------------
+
+        k = 20;
+
+	    //--------------------------------------------------------------
+
+        //--------------------------------------------------------------
+
+        start = std::chrono::high_resolution_clock::now();
+        for ( int j = 0; j < k; j++ ) {
+            grafo->dijkstra_heap( rand() % grafo->getNumVertices() + 1 );
+        }
+        finish = chrono::high_resolution_clock::now();
+        elapsed = finish - start;
+        cout << "Tempo medio usando heap: " << elapsed.count() / k << "s" << endl << endl;
+
+        cout << "--------------------------------------------------------------------------------------------------" << endl << endl;
+    }
+
+    delete grafo;
+
+    
     
     
 
