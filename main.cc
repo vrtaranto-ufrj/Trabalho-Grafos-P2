@@ -25,7 +25,7 @@ int main( int argc, char *argv[] ) {
     ifstream file;
     file.open( "rede_colaboracao_vertices.txt" );
 
-    int id = 0;
+    int id = 1;
     while ( !file.eof() ) {
         getline( file, nome, ',' );
         getline( file, nome );
